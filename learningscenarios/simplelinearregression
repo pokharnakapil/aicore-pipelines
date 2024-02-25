@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: simplelinearregression # executable id, must be unique across all your workflows (YAML files), please modify this to any value (e.g. code-pipeline-12345) if you are not the only user of your SAP AI Core instance.
+  annotations:
+    scenarios.ai.sap.com/description: "Tutorial to add custom code to SAP AI Core"
+    scenarios.ai.sap.com/name: "salarypredictor"
+    executables.ai.sap.com/description: "salarypredictor"
+    executables.ai.sap.com/name: "salarypredictor"
+  labels:
+    scenarios.ai.sap.com/id: "salarypredictor"
+    ai.sap.com/version: "1.0"
+spec:
+  imagePullSecrets:
+    - name: credstutorialrepo # your docker registry secret
+  entrypoint: salarypredictor
+  templates:
+  - name: salarypredictor
+    steps:
+    - - name: salarypredictor
+        template: salarypredictor
+
+  - name: salarypredictor
+    container:
+      image: docker.io/kapilpokharna/simplelinearregression:01 # Your docker image name
+      command: ["/bin/sh", "-c"]
+      args:
+        - "python /app/src/simple_linear_regression.py"
